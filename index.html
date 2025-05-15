@@ -440,25 +440,22 @@
   <h2 class="section-title pb-5">GALERÍA</h2>
 
   <div class="galeria-carousel">
+    <!-- Botón anterior -->
     <button class="galeria-btn prev" onclick="prevFoto()">&#10094;</button>
 
-    <div class="galeria-slide active">
-      <img src="./assets/img/galeria/1.jpg" alt="Foto 1">
-    </div>
+    <!-- Aquí se inyectan dinámicamente las .galeria-slide vía JS -->
 
-    <div class="galeria-slide">
-      <img src="./assets/img/galeria/2.jpg" alt="Foto 1">
-    </div>
-
-    <div class="galeria-slide">
-      <img src="./assets/img/galeria/3.jpg" alt="Foto 1">
-    </div>
-
-    
-
+    <!-- Botón siguiente -->
     <button class="galeria-btn next" onclick="nextFoto()">&#10095;</button>
   </div>
 </section>
+
+<!-- Modal para mostrar la imagen ampliada -->
+<div id="modalGaleria" class="modal-galeria">
+  <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+  <img id="imagenModal" class="modal-imagen" alt="Foto ampliada">
+</div>
+
 
 
 

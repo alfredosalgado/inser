@@ -189,24 +189,60 @@ function prevSlide() {
 
 
 
-let currentFoto = 0;
-const fotos = document.querySelectorAll(".galeria-slide");
+document.addEventListener('DOMContentLoaded', () => {
+  const totalFotos = 413;
+  const carousel   = document.querySelector('.galeria-carousel');
+  const nextBtn    = carousel.querySelector('.galeria-btn.next');
+  const prevBtn    = carousel.querySelector('.galeria-btn.prev');
+  const slides     = [];
 
-function showFoto(index) {
-  fotos.forEach((foto, i) => {
-    foto.classList.toggle("active", i === index);
-  });
-}
+  // Generar slides
+  for (let i = 1; i <= totalFotos; i++) {
+    const slide = document.createElement('div');
+    slide.className = 'galeria-slide';
+    if (i === 1) slide.classList.add('active');
 
-function nextFoto() {
-  currentFoto = (currentFoto + 1) % fotos.length;
-  showFoto(currentFoto);
-}
+    const img = document.createElement('img');
+    img.src = `./assets/img/galeria/${i}.jpg`;
+    img.alt = `Foto ${i}`;
+    img.style.cursor = 'pointer';
+    img.addEventListener('click', () => abrirModal(img.src));
 
-function prevFoto() {
-  currentFoto = (currentFoto - 1 + fotos.length) % fotos.length;
-  showFoto(currentFoto);
-}
+    slide.appendChild(img);
+    // Insertar antes del botón “siguiente”
+    carousel.insertBefore(slide, nextBtn);
+    slides.push(slide);
+  }
+
+  let currentFoto = 0;
+  function showFoto(idx) {
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+  }
+  function nextFoto() {
+    currentFoto = (currentFoto + 1) % slides.length;
+    showFoto(currentFoto);
+  }
+  function prevFoto() {
+    currentFoto = (currentFoto - 1 + slides.length) % slides.length;
+    showFoto(currentFoto);
+  }
+  nextBtn.addEventListener('click', nextFoto);
+  prevBtn.addEventListener('click', prevFoto);
+
+  // Modal
+  const modal = document.getElementById('modalGaleria');
+  const imgModal = document.getElementById('imagenModal');
+  document.querySelector('.cerrar-modal').addEventListener('click', cerrarModal);
+  window.addEventListener('click', e => { if (e.target === modal) cerrarModal(); });
+
+  function abrirModal(src) {
+    imgModal.src = src;
+    modal.style.display = 'flex';
+  }
+  function cerrarModal() {
+    modal.style.display = 'none';
+  }
+});
 
 
 

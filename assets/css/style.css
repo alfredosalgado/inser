@@ -653,6 +653,52 @@
   right: 0;
 }
 
+/* Solo en pantallas de PC (ajusta el breakpoint a tu gusto) */
+@media (min-width: 992px) {
+  .galeria-slide img {
+    /* Que no pase del 70% de la altura visible */
+    max-height: 70vh;
+    /* No sobresalga del ancho del carrusel */
+    max-width: 100%;
+    /* Mantener proporción */
+    width: auto;
+    height: auto;
+    /* Opción: asegura que no se estire si el contenedor cambia */
+    object-fit: contain;
+    /* Centrar horizontalmente si sobra espacio */
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+
+.modal-galeria {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* o el valor que necesites, mientras sea > navbar */
+}
+
+.modal-galeria .modal-imagen {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+
+.cerrar-modal {
+  position: absolute;
+  top: 1rem; right: 1.5rem;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+}
+
 
 
 
