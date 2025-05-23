@@ -190,51 +190,81 @@ function prevSlide() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  const totalFotos = 413;
+  const totalFotos = 17;
   const carousel   = document.querySelector('.galeria-carousel');
   const nextBtn    = carousel.querySelector('.galeria-btn.next');
   const prevBtn    = carousel.querySelector('.galeria-btn.prev');
   const slides     = [];
 
-  // Generar slides
+  // 1) Generar slides
   for (let i = 1; i <= totalFotos; i++) {
     const slide = document.createElement('div');
     slide.className = 'galeria-slide';
-    if (i === 1) slide.classList.add('active');
-
     const img = document.createElement('img');
     img.src = `./assets/img/galeria/${i}.jpg`;
     img.alt = `Foto ${i}`;
     img.style.cursor = 'pointer';
     img.addEventListener('click', () => abrirModal(img.src));
-
     slide.appendChild(img);
-    // Insertar antes del botón “siguiente”
     carousel.insertBefore(slide, nextBtn);
     slides.push(slide);
   }
 
   let currentFoto = 0;
-  function showFoto(idx) {
-    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+
+  // 2) Detectar cuántas slides mostramos según el ancho
+  function getVisibleCount() {
+    const w = window.innerWidth;
+    if (w >= 900) return 4;
+    if (w >= 768) return 3;
+    return 2;
   }
+
+  // 3) Mostrar un rango de slides activos
+  function showFoto(idx) {
+    const count = getVisibleCount();
+    slides.forEach((s, i) => {
+      // activo si i está entre idx y idx+count-1 (con wrap-around)
+      let active = false;
+      for (let j = 0; j < count; j++) {
+        if ((idx + j) % slides.length === i) {
+          active = true;
+          break;
+        }
+      }
+      s.classList.toggle('active', active);
+    });
+  }
+
+  // 4) Avanzar o retroceder de a "count" slides
   function nextFoto() {
-    currentFoto = (currentFoto + 1) % slides.length;
+    const count = getVisibleCount();
+    currentFoto = (currentFoto + count) % slides.length;
     showFoto(currentFoto);
   }
   function prevFoto() {
-    currentFoto = (currentFoto - 1 + slides.length) % slides.length;
+    const count = getVisibleCount();
+    currentFoto = (currentFoto - count + slides.length) % slides.length;
     showFoto(currentFoto);
   }
+
   nextBtn.addEventListener('click', nextFoto);
   prevBtn.addEventListener('click', prevFoto);
 
-  // Modal
+  // 5) Al cambiar el tamaño de ventana, refrescamos la vista
+  window.addEventListener('resize', () => showFoto(currentFoto));
+
+  // 6) Inicializamos la primera vista
+  showFoto(currentFoto);
+
+  // 7) Autoplay cada 4 segundos, también saltando de a "count"
+  setInterval(nextFoto, 4000);
+
+  // --- Modal igual que antes ---
   const modal = document.getElementById('modalGaleria');
   const imgModal = document.getElementById('imagenModal');
   document.querySelector('.cerrar-modal').addEventListener('click', cerrarModal);
   window.addEventListener('click', e => { if (e.target === modal) cerrarModal(); });
-
   function abrirModal(src) {
     imgModal.src = src;
     modal.style.display = 'flex';
